@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 
 import {
-  Home,
-  Explore,
-  Saved,
-  CreatePost,
-  Profile,
-  EditPost,
-  PostDetails,
+  // Home,
+  // Explore,
+  // Saved,
+  // CreatePost,
+  // Profile,
+  // EditPost,
+  // PostDetails,
   UpdateProfile,
-  AllUsers,
+  // AllUsers,
 } from "@/_root/pages";
 import AuthLayout from "./_auth/AuthLayout";
 import RootLayout from "./_root/RootLayout";
