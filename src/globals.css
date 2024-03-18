@@ -94,17 +94,17 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar {
-    width: 3px;
+    width: 1px;
     height: 3px;
     border-radius: 2px;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: #09090a;
+    background: whitesmoke;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #5c5c7b;
+    background: lightgray;
     border-radius: 50px;
   }
 
@@ -148,7 +148,7 @@
   }
 
   .home-creators {
-    @apply hidden xl:flex flex-col w-72 2xl:w-465 px-6 py-10 gap-10  overflow-scroll custom-scrollbar;
+    @apply hidden xl:flex flex-col w-72 2xl:w-1/6 px-6 py-10 gap-10  overflow-scroll custom-scrollbar;
   }
 
   /* Post Details */
@@ -232,7 +232,7 @@
 
   /* Post Card */
   .post-card {
-    @apply bg-dark-2 rounded-3xl border border-dark-4 p-5 lg:p-7 w-full max-w-screen-sm;
+    @apply bg-white rounded-3xl border-none p-5 lg:p-7 w-full max-w-screen-sm;
   }
 
   .post-card_img {
@@ -246,7 +246,7 @@
 
   /* User card */
   .user-card {
-    @apply flex-center flex-col gap-4 border border-dark-4 rounded-[20px] px-5 py-8;
+    @apply flex-center flex-col gap-4 border border-gray-300 rounded-[20px] px-5 py-8;
   }
 }
 

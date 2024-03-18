@@ -76,8 +76,8 @@ const LeftSidebar = () => {
                   isActive && "bg-yellow-400"
                 }`}>
                 <NavLink
-                  // to={link.route}
-                  to={'/'}
+                  to={link.route}
+                  // to={'/'}
                   
                   className="flex gap-4 text-dark-4 font-bold items-center p-4">
                   <img
