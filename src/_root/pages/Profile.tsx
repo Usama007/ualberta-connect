@@ -11,8 +11,7 @@ import { Button } from "@/components/ui";
 import { LikedPosts } from "@/_root/pages";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetUserById } from "@/lib/react-query/queries";
-import { GridPostList, Loader, PostStats } from "@/components/shared";
-import { json } from "stream/consumers";
+import {  Loader, PostStats } from "@/components/shared";
 import { multiFormatDateString } from "@/lib/utils";
 
 interface StabBlockProps {
