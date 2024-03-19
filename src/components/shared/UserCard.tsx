@@ -17,7 +17,7 @@ const UserCard = ({ user }: UserCardProps) => {
       />
 
       <div className="flex-center flex-col gap-1">
-        <p className="base-medium text-dark-1 text-center line-clamp-1">
+        <p className=" text-dark-1 font-bold text-center line-clamp-1">
           {user.name}
         </p>
         <p className="small-regular text-dark-3 text-center line-clamp-1">

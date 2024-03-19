@@ -42,10 +42,10 @@ const PostDetails = () => {
           <img
             src={"/assets/icons/back.svg"}
             alt="back"
-            width={24}
-            height={24}
+            width={20}
+            height={20}
           />
-          <p className="small-medium lg:base-medium">Back</p>
+          <p className="small-medium lg:base-medium text-dark-1">Back</p>
         </Button>
       </div>
 
@@ -73,15 +73,15 @@ const PostDetails = () => {
                   className="w-8 h-8 lg:w-12 lg:h-12 rounded-full"
                 />
                 <div className="flex gap-1 flex-col">
-                  <p className="base-medium lg:body-bold text-light-1">
+                  <p className="base-medium lg:body-bold text-dark-1">
                     {post?.creator.name}
                   </p>
-                  <div className="flex-center gap-2 text-light-3">
-                    <p className="subtle-semibold lg:small-regular ">
+                  <div className="flex-center gap-2 text-dark-3">
+                    <p className="subtle-semibold lg:small-regular text-dark-2">
                       {multiFormatDateString(post?.$createdAt)}
                     </p>
                     •
-                    <p className="subtle-semibold lg:small-regular">
+                    <p className="subtle-semibold lg:small-regular text-dark-3">
                       {post?.location}
                     </p>
                   </div>
@@ -119,12 +119,12 @@ const PostDetails = () => {
             <hr className="border w-full border-dark-4/80" />
 
             <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
-              <p>{post?.caption}</p>
+              <p className="text-dark-4">{post?.caption}</p>
               <ul className="flex gap-1 mt-2">
                 {post?.tags.map((tag: string, index: string) => (
                   <li
                     key={`${tag}${index}`}
-                    className="text-light-3 small-regular">
+                    className="text-light-4 small-regular">
                     #{tag}
                   </li>
                 ))}
