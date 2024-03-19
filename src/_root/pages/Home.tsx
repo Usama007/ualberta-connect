@@ -5,8 +5,6 @@ import { Loader, PostCard, UserCard } from "@/components/shared";
 import { useGetRecentPosts, useGetUsers } from "@/lib/react-query/queries";
 
 const Home = () => {
-  // const { toast } = useToast();
-
   const {
     data: posts,
     isLoading: isPostLoading,
