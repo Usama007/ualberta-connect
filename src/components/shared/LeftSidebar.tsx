@@ -41,7 +41,7 @@ const LeftSidebar = () => {
             <Loader />
           </div>
         ) : (
-          <Link to={`/`} className="flex gap-3 items-center">
+          <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
             <img
               src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
               alt="profile"
@@ -52,17 +52,6 @@ const LeftSidebar = () => {
               <p className="small-regular text-light-3">@{user.username}</p>
             </div>
           </Link>
-          // <Link to={`/profile/${user.id}`} className="flex gap-3 items-center">
-          //   <img
-          //     src={user.imageUrl || "/assets/icons/profile-placeholder.svg"}
-          //     alt="profile"
-          //     className="h-14 w-14 rounded-full"
-          //   />
-          //   <div className="flex flex-col">
-          //     <p className="body-bold">{user.name}</p>
-          //     <p className="small-regular text-light-3">@{user.username}</p>
-          //   </div>
-          // </Link>
         )}
 
         <ul className="flex flex-col gap-6">
@@ -78,7 +67,7 @@ const LeftSidebar = () => {
                 <NavLink
                   to={link.route}
                   // to={'/'}
-                  
+
                   className="flex gap-4 text-dark-4 font-bold items-center p-4">
                   <img
                     src={link.imgURL}

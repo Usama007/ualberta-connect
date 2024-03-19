@@ -182,7 +182,7 @@
   }
 
   .profile-tab {
-    @apply flex-center gap-3 py-4 w-48 bg-dark-2  transition flex-1 xl:flex-initial;
+    @apply flex-center gap-3 py-4 w-48 bg-gray-300  transition flex-1 xl:flex-initial;
   }
 
   /* Saved */
@@ -201,7 +201,7 @@
   }
 
   .file_uploader-label {
-    @apply text-light-4 text-center small-regular w-full p-4 border-t border-t-dark-4;
+    @apply text-light-4 text-center small-regular w-full p-4 border-t border-t-gray-300;
   }
 
   .file_uploader-box {

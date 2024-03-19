@@ -11,7 +11,9 @@ import { Button } from "@/components/ui";
 import { LikedPosts } from "@/_root/pages";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetUserById } from "@/lib/react-query/queries";
-import { GridPostList, Loader } from "@/components/shared";
+import { GridPostList, Loader, PostStats } from "@/components/shared";
+import { json } from "stream/consumers";
+import { multiFormatDateString } from "@/lib/utils";
 
 interface StabBlockProps {
   value: string | number;
@@ -20,8 +22,8 @@ interface StabBlockProps {
 
 const StatBlock = ({ value, label }: StabBlockProps) => (
   <div className="flex-center gap-2">
-    <p className="small-semibold lg:body-bold text-primary-500">{value}</p>
-    <p className="small-medium lg:base-medium text-light-2">{label}</p>
+    <p className="text-dark-2 font-extrabold">{value}</p>
+    <p className="text-dark-2 font-semibold">{label}</p>
   </div>
 );
 
@@ -31,6 +33,8 @@ const Profile = () => {
   const { pathname } = useLocation();
 
   const { data: currentUser } = useGetUserById(id || "");
+
+  console.log(currentUser?.posts);
 
   if (!currentUser)
     return (
@@ -52,10 +56,10 @@ const Profile = () => {
           />
           <div className="flex flex-col flex-1 justify-between md:mt-2">
             <div className="flex flex-col w-full">
-              <h1 className="text-center xl:text-left h3-bold md:h1-semibold w-full">
+              <h1 className="text-center xl:text-left h3-bold md:h1-semibold w-full text-dark-1">
                 {currentUser.name}
               </h1>
-              <p className="small-regular md:body-medium text-light-3 text-center xl:text-left">
+              <p className="small-regular md:body-medium text-dark-3 text-center xl:text-left">
                 @{currentUser.username}
               </p>
             </div>
@@ -66,7 +70,7 @@ const Profile = () => {
               <StatBlock value={20} label="Following" />
             </div>
 
-            <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm">
+            <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm text-dark-1">
               {currentUser.bio}
             </p>
           </div>
@@ -75,7 +79,7 @@ const Profile = () => {
             <div className={`${user.id !== currentUser.$id && "hidden"}`}>
               <Link
                 to={`/update-profile/${currentUser.$id}`}
-                className={`h-12 bg-dark-4 px-5 text-light-1 flex-center gap-2 rounded-lg ${
+                className={`h-12 bg-green-900 px-5 text-light-1 flex-center gap-2 rounded-lg ${
                   user.id !== currentUser.$id && "hidden"
                 }`}>
                 <img
@@ -90,7 +94,7 @@ const Profile = () => {
               </Link>
             </div>
             <div className={`${user.id === id && "hidden"}`}>
-              <Button type="button" className="shad-button_primary px-8">
+              <Button type="button" className="shad-button_green px-8">
                 Follow
               </Button>
             </div>
@@ -102,28 +106,16 @@ const Profile = () => {
         <div className="flex max-w-5xl w-full">
           <Link
             to={`/profile/${id}`}
-            className={`profile-tab rounded-l-lg ${
-              pathname === `/profile/${id}` && "!bg-dark-3"
+            className={`profile-tab rounded-l-lg  text-dark-2 font-bold ${
+              pathname === `/profile/${id}` && "!bg-yellow-400"
             }`}>
-            <img
-              src={"/assets/icons/posts.svg"}
-              alt="posts"
-              width={20}
-              height={20}
-            />
             Posts
           </Link>
           <Link
             to={`/profile/${id}/liked-posts`}
-            className={`profile-tab rounded-r-lg ${
-              pathname === `/profile/${id}/liked-posts` && "!bg-dark-3"
+            className={`profile-tab rounded-r-lg  text-dark-2 font-bold ${
+              pathname === `/profile/${id}/liked-posts` && "!bg-yellow-400"
             }`}>
-            <img
-              src={"/assets/icons/like.svg"}
-              alt="like"
-              width={20}
-              height={20}
-            />
             Liked Posts
           </Link>
         </div>
@@ -132,7 +124,67 @@ const Profile = () => {
       <Routes>
         <Route
           index
-          element={<GridPostList posts={currentUser.posts} showUser={false} />}
+          // element={<GridPostList posts={currentUser.posts} showUser={false} />}
+          element={
+            <>
+              {currentUser?.posts?.map((post: any) => (
+                <div className="post_details-card">
+                  <img
+                    src={post?.imageUrl}
+                    alt="creator"
+                    className="post_details-img"
+                  />
+                  <div className="post_details-info">
+                    <div className="flex-between w-full">
+                      <Link
+                        to={`/profile/${id}`}
+                        className="flex items-center gap-3">
+                        <img
+                          src={
+                            currentUser?.imageUrl ||
+                            "/assets/icons/profile-placeholder.svg"
+                          }
+                          alt="creator"
+                          className="w-8 h-8 lg:w-12 lg:h-12 rounded-full"
+                        />
+                        <div className="flex gap-1 flex-col">
+                          <p className="base-medium lg:body-bold text-dark-1">
+                            {currentUser?.name}
+                          </p>
+                          <div className="flex-center gap-2 text-dark-3">
+                            <p className="subtle-semibold lg:small-regular text-dark-2">
+                              {multiFormatDateString(post?.$createdAt)}
+                            </p>
+                            •
+                            <p className="subtle-semibold lg:small-regular text-dark-3">
+                              {post?.location}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    </div>
+
+                    <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
+                      <p className="text-dark-4">{post?.caption}</p>
+                      <ul className="flex gap-1 mt-2">
+                        {post?.tags.map((tag: string, index: string) => (
+                          <li
+                            key={`${tag}${index}`}
+                            className="text-light-4 small-regular">
+                            #{tag}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="w-full">
+                      <PostStats post={post} userId={user.id} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          }
         />
         {currentUser.$id === user.id && (
           <Route path="/liked-posts" element={<LikedPosts />} />
