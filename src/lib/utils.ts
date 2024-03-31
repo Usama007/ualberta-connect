@@ -7,6 +7,36 @@ export function cn(...inputs: ClassValue[]) {
 
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 
+export const convertToPng = async (webpFile: File): Promise<File> => {
+  try {
+    const blob = new Blob([webpFile], { type: 'image/webp' });
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+      reader.onload = (event:any) => {
+        const image:any = new Image();
+        image.onload = () => {
+          const canvas = document.createElement('canvas');
+          const context:any = canvas.getContext('2d');
+          canvas.width = image.width;
+          canvas.height = image.height;
+          context.drawImage(image, 0, 0);
+          canvas.toBlob((pngBlob:any) => {
+            resolve(new File([pngBlob], 'converted_image.png', { type: 'image/png' }));
+          }, 'image/png');
+        };
+        image.src = event.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  } catch (error) {
+    console.error('Error converting image:', error);
+    throw error; // Re-throw for handling in onDrop
+  }
+};
+
+
 export function formatDateString(dateString: string) {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
