@@ -80,10 +80,10 @@ export const useSearchPosts = (searchTerm: string) => {
   });
 };
 
-export const useGetRecentPosts = () => {
+export const useGetRecentPosts = (userId:string) => {
   return useQuery({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-    queryFn: getRecentPosts,
+    queryFn: () =>  getRecentPosts(userId),
   });
 };
 

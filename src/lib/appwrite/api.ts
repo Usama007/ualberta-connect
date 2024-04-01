@@ -429,8 +429,12 @@ export async function getUserPosts(userId?: string) {
 }
 
 // ============================== GET POPULAR POSTS (BY HIGHEST LIKE COUNT)
-export async function getRecentPosts() {
+
+
+export async function getRecentPosts(userId:string) {
   try {
+
+    console.log(userId)
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
       appwriteConfig.postCollectionId,
@@ -438,8 +442,27 @@ export async function getRecentPosts() {
     );
 
     if (!posts) throw Error;
+    console.log('USAMA1',posts)
 
+  
+
+     posts?.documents?.sort((a, b) => {
+      const likesA = a.likes.filter(
+        (like: any) => like.$id === userId
+      ).length;
+      const likesB = b.likes.filter(
+        (like: any) => like.$id === userId
+      ).length;
+
+      return likesB - likesA;
+    });
+
+    console.log('USAMA2',posts)
     return posts;
+
+
+
+    
   } catch (error) {
     console.log(error);
   }

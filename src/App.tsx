@@ -26,8 +26,11 @@ import SigninForm from "@/_auth/forms/SigninForm";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
+import { useUserContext } from "./context/AuthContext";
 
 const App = () => {
+  const { user } = useUserContext();
+
   return (
     <main className="flex h-screen">
       <Routes>
@@ -40,7 +43,8 @@ const App = () => {
         {/* private routes */}
         <Route element={<RootLayout />}>
         {/* <Route index element={<UpdateProfile />} /> */}
-          <Route index element={<Home />} />
+        {user?.id &&  <Route index element={<Home />} />}
+         
           <Route path="/explore" element={<Explore />} />
           <Route path="/saved" element={<Saved />} />
           <Route path="/all-users" element={<AllUsers/>} />
