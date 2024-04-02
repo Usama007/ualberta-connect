@@ -25,6 +25,7 @@ import {
   searchPosts,
   savePost,
   deleteSavedPost,
+  getInfiniteRecentPosts,
 } from "@/lib/appwrite/api";
 import { INewPost, INewUser, IUpdatePost, IUpdateUser } from "@/types";
 
@@ -80,11 +81,29 @@ export const useSearchPosts = (searchTerm: string) => {
   });
 };
 
-export const useGetRecentPosts = (userId:string) => {
-  return useQuery({
+export const useGetRecentPosts = () => {
+
+  return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-    queryFn: () =>  getRecentPosts(userId),
+    queryFn:  getInfiniteRecentPosts as any,
+    getNextPageParam: (lastPage: any) => {
+      // If there's no data, there are no more pages.
+      if (lastPage && lastPage.documents.length === 0) {
+        return null;
+      }
+
+      // Use the $id of the last document as the cursor.
+      const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
+      return lastId;
+    },
   });
+
+
+
+  // return useQuery({
+  //   queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
+  //   queryFn: () =>  getRecentPosts(userId),
+  // });
 };
 
 export const useCreatePost = () => {

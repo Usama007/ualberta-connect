@@ -2,15 +2,54 @@ import { Models } from "appwrite";
 
 // import { useToast } from "@/components/ui/use-toast";
 import { Loader, PostCard, UserCard } from "@/components/shared";
-import { useGetRecentPosts, useGetUsers } from "@/lib/react-query/queries";
+import {
+  useGetCurrentUser,
+  useGetRecentPosts,
+  useGetUsers,
+} from "@/lib/react-query/queries";
 import { useUserContext } from "@/context/AuthContext";
+import { useInView } from "react-intersection-observer";
+import { Fragment, useEffect } from "react";
 
 const Home = () => {
   const { user, isLoading } = useUserContext();
+  const { ref, inView } = useInView();
+  const { data: currentUser } = useGetCurrentUser();
 
   // Call useGetRecentPosts only when user?.id is available
-  const { data: posts, isLoading: isPostLoading, isError: isErrorPosts } = useGetRecentPosts(user?.id);
-  const { data: creators, isLoading: isUserLoading, isError: isErrorCreators } = useGetUsers(10);
+  // const { data: posts, isLoading: isPostLoading, isError: isErrorPosts } = useGetRecentPosts(user?.id);
+
+  const {
+    data: posts,
+    fetchNextPage,
+    hasNextPage,
+    isError: isErrorPosts,
+  } = useGetRecentPosts();
+
+  const {
+    data: creators,
+    isLoading: isUserLoading,
+    isError: isErrorCreators,
+  } = useGetUsers(10);
+
+  useEffect(() => {
+    if (inView) {
+      fetchNextPage();
+    }
+  }, [inView]);
+
+  useEffect(() => {
+    if (posts) {
+      console.log(posts);
+    }
+  }, [posts]);
+
+  if (!posts)
+    return (
+      <div className="flex-center w-full h-full">
+        <Loader />
+      </div>
+    );
 
   if (isErrorPosts || isErrorCreators) {
     return (
@@ -29,19 +68,30 @@ const Home = () => {
     <div className="flex flex-1">
       <div className="home-container">
         <div className="home-posts">
-          <h2 className="h3-bold md:h2-bold text-left text-dark-4 w-full">Campus Feed</h2>
-          {(isLoading || isPostLoading) && !posts ? ( // Simplified loading check
+          <h2 className="h3-bold md:h2-bold text-left text-dark-4 w-full">
+            Campus Feed
+          </h2>
+          {/* {(isLoading || isPostLoading) && !posts ? ( // Simplified loading check
             <Loader />
-          ) : (
-            <ul className="flex flex-col flex-1 gap-9 w-full ">
-              {posts?.documents.map((post: Models.Document) => (
-                <li key={post.$id} className="flex justify-center w-full">
-                  <PostCard post={post} />
-                </li>
-              ))}
-            </ul>
-          )}
+          ) : ( */}
+          <ul className="flex flex-col flex-1 gap-9 w-full ">
+            {posts?.pages?.map((post: Models.Document, index) => (
+              <Fragment key={index}>
+                {post?.documents?.map((item: Models.Document) => (
+                  <li key={item.$id} className="flex justify-center w-full">
+                    <PostCard post={item} />
+                  </li>
+                ))}
+              </Fragment>
+            ))}
+          </ul>
+          {/* )} */}
         </div>
+        {hasNextPage && (
+          <div ref={ref} className="mt-10">
+            <Loader />
+          </div>
+        )}
       </div>
 
       <div className="home-creators">

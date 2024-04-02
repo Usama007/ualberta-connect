@@ -37,6 +37,11 @@ const Explore = () => {
     }
   }, [inView, searchValue]);
 
+  useEffect(() => {
+    console.log(posts)
+  }, [posts])
+  
+
   if (!posts)
     return (
       <div className="flex-center w-full h-full">
