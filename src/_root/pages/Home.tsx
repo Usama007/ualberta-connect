@@ -7,12 +7,10 @@ import {
   useGetRecentPosts,
   useGetUsers,
 } from "@/lib/react-query/queries";
-import { useUserContext } from "@/context/AuthContext";
 import { useInView } from "react-intersection-observer";
 import { Fragment, useEffect } from "react";
 
 const Home = () => {
-  const { user, isLoading } = useUserContext();
   const { ref, inView } = useInView();
   const { data: currentUser } = useGetCurrentUser();
 
@@ -24,7 +22,7 @@ const Home = () => {
     fetchNextPage,
     hasNextPage,
     isError: isErrorPosts,
-  } = useGetRecentPosts();
+  } = useGetRecentPosts(currentUser);
 
   const {
     data: creators,

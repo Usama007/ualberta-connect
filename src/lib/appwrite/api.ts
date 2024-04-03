@@ -205,7 +205,7 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
   }
 }
 
-export async function getInfiniteRecentPosts({ pageParam }: { pageParam: number }) {
+export async function getInfiniteRecentPosts({ pageParam }: { pageParam: number }, currentUser: any) {
   const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(2)];
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
@@ -219,13 +219,15 @@ export async function getInfiniteRecentPosts({ pageParam }: { pageParam: number 
    
     if (!posts) throw Error;
 
+      console.log(currentUser)
+
+ 
     
     return posts;
   } catch (error) {
     console.log(error);
   }
 }
-
 
 
 // ============================== GET POST BY ID

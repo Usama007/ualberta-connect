@@ -20,7 +20,6 @@ import {
   likePost,
   getUserById,
   updateUser,
-  getRecentPosts,
   getInfinitePosts,
   searchPosts,
   savePost,
@@ -81,21 +80,22 @@ export const useSearchPosts = (searchTerm: string) => {
   });
 };
 
-export const useGetRecentPosts = () => {
+export const useGetRecentPosts = (currentUser:any) => {
 
   return useInfiniteQuery({
     queryKey: [QUERY_KEYS.GET_RECENT_POSTS],
-    queryFn:  getInfiniteRecentPosts as any,
+    queryFn: ({ pageParam }) => getInfiniteRecentPosts({ pageParam }, currentUser),
     getNextPageParam: (lastPage: any) => {
-      // If there's no data, there are no more pages.
-      if (lastPage && lastPage.documents.length === 0) {
+      // If there's no data or lastPage is undefined, there are no more pages.
+      if (!lastPage || lastPage.documents.length === 0) {
         return null;
       }
-
+    
       // Use the $id of the last document as the cursor.
       const lastId = lastPage.documents[lastPage.documents.length - 1].$id;
       return lastId;
     },
+    
   });
 
 

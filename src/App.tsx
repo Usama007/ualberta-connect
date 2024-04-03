@@ -26,10 +26,10 @@ import SigninForm from "@/_auth/forms/SigninForm";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
-import { useUserContext } from "./context/AuthContext";
+import { useGetCurrentUser } from "./lib/react-query/queries";
 
 const App = () => {
-  const { user } = useUserContext();
+  const { data: currentUser } = useGetCurrentUser();
 
   return (
     <main className="flex h-screen">
@@ -43,7 +43,7 @@ const App = () => {
         {/* private routes */}
         <Route element={<RootLayout />}>
         {/* <Route index element={<UpdateProfile />} /> */}
-        {user?.id &&  <Route index element={<Home />} />}
+        {currentUser?.$id &&  <Route index element={<Home />} />}
          
           <Route path="/explore" element={<Explore />} />
           <Route path="/saved" element={<Saved />} />
