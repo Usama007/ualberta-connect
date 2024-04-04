@@ -204,9 +204,8 @@ export async function getInfinitePosts({ pageParam }: { pageParam: number }) {
     console.log(error);
   }
 }
-
 export async function getInfiniteRecentPosts({ pageParam }: { pageParam: number }, currentUser: any) {
-  const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(2)];
+  const queries: any[] = [Query.orderDesc("$createdAt"), Query.limit(10)];
   if (pageParam) {
     queries.push(Query.cursorAfter(pageParam.toString()));
   }
@@ -216,20 +215,29 @@ export async function getInfiniteRecentPosts({ pageParam }: { pageParam: number 
       appwriteConfig.postCollectionId,
       queries
     );
-   
     if (!posts) throw Error;
-
-      console.log(currentUser)
-
- 
-    
+    const tags: string[] = [];
+    for (const likedItem of currentUser?.liked) {
+      for (const tag of likedItem?.tags) {
+        tags.push(tag);
+      }
+    }
+    for(let tag of tags){
+      posts?.documents?.sort((a, b) => {
+        const tagA = a.tags.filter(
+          (like: any) => like?.toLowerCase() == tag?.toLowerCase() 
+        ).length;
+        const tagB = b.tags.filter(
+          (like: any) => like?.toLowerCase()  == tag?.toLowerCase() 
+        ).length;
+        return tagB - tagA;
+      });  
+    }    
     return posts;
   } catch (error) {
     console.log(error);
   }
 }
-
-
 // ============================== GET POST BY ID
 export async function getPostById(postId?: string) {
   if (!postId) throw Error;

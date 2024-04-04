@@ -5,43 +5,37 @@ import {
   Outlet,
   useParams,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
-
 import { Button } from "@/components/ui";
 import { LikedPosts } from "@/_root/pages";
 import { useUserContext } from "@/context/AuthContext";
 import { useGetUserById } from "@/lib/react-query/queries";
-import {  Loader, PostStats } from "@/components/shared";
+import { Loader, PostStats } from "@/components/shared";
 import { multiFormatDateString } from "@/lib/utils";
-
 interface StabBlockProps {
   value: string | number;
   label: string;
 }
-
 const StatBlock = ({ value, label }: StabBlockProps) => (
   <div className="flex-center gap-2">
     <p className="text-dark-2 font-extrabold">{value}</p>
     <p className="text-dark-2 font-semibold">{label}</p>
   </div>
 );
-
 const Profile = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUserContext();
   const { pathname } = useLocation();
-
   const { data: currentUser } = useGetUserById(id || "");
-
   console.log(currentUser?.posts);
-
   if (!currentUser)
     return (
       <div className="flex-center w-full h-full">
         <Loader />
       </div>
     );
-
   return (
     <div className="profile-container">
       <div className="profile-inner_container">
@@ -62,18 +56,15 @@ const Profile = () => {
                 @{currentUser.username}
               </p>
             </div>
-
             <div className="flex gap-8 mt-10 items-center justify-center xl:justify-start flex-wrap z-20">
               <StatBlock value={currentUser.posts.length} label="Posts" />
               <StatBlock value={20} label="Followers" />
               <StatBlock value={20} label="Following" />
             </div>
-
             <p className="small-medium md:base-medium text-center xl:text-left mt-7 max-w-screen-sm text-dark-1">
               {currentUser.bio}
             </p>
           </div>
-
           <div className="flex justify-center gap-4">
             <div className={`${user.id !== currentUser.$id && "hidden"}`}>
               <Link
@@ -100,7 +91,6 @@ const Profile = () => {
           </div>
         </div>
       </div>
-
       {currentUser.$id === user.id && (
         <div className="flex max-w-5xl w-full">
           <Link
@@ -119,7 +109,6 @@ const Profile = () => {
           </Link>
         </div>
       )}
-
       <Routes>
         <Route
           index
@@ -127,7 +116,13 @@ const Profile = () => {
           element={
             <>
               {currentUser?.posts?.map((post: any) => (
-                <div className="post_details-card">
+                <div
+                  key={post.$id}
+                  className="post_details-card"
+                  style={{cursor:'pointer'}}
+                  onClick={() => {
+                    navigate(`/posts/${post.$id}`);
+                  }}>
                   <img
                     src={post?.imageUrl}
                     alt="creator"
@@ -162,7 +157,6 @@ const Profile = () => {
                         </div>
                       </Link>
                     </div>
-
                     <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
                       <p className="text-dark-4">{post?.caption}</p>
                       <ul className="flex gap-1 mt-2">
@@ -175,7 +169,6 @@ const Profile = () => {
                         ))}
                       </ul>
                     </div>
-
                     <div className="w-full">
                       <PostStats post={post} userId={user.id} />
                     </div>
@@ -193,5 +186,4 @@ const Profile = () => {
     </div>
   );
 };
-
 export default Profile;
