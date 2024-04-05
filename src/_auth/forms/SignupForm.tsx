@@ -32,16 +32,31 @@ const SignupForm = () => {
   const { mutateAsync: createUserAccount, isLoading: isCreatingAccount } = useCreateUserAccount();
   const { mutateAsync: signInAccount, isLoading: isSigningInUser } = useSignInAccount();
 
+  function hasUAlbertaCA(email:any) {
+    const regex = /@ualberta\.ca$/; // Regular expression to match "@ualberta.ca" at the end of the string
+    return regex.test(email);
+  }
+
   // Handler
   const handleSignup = async (user: z.infer<typeof SignupValidation>) => {
     try {
+
+      if(!hasUAlbertaCA(user.email)){
+        toast({ title: "For creating an account, please use a @ualberta.ca email address", });
+        return;
+
+      }
       const newUser = await createUserAccount(user);
+
+     
 
       if (!newUser) {
         toast({ title: "Sign up failed. Please try again.", });
         
         return;
       }
+
+     
 
       const session = await signInAccount({
         email: user.email,
