@@ -22,7 +22,7 @@ export const convertToPng = async (webpFile: File): Promise<File> => {
           canvas.height = image.height;
           context.drawImage(image, 0, 0);
           canvas.toBlob((pngBlob:any) => {
-            resolve(new File([pngBlob], `${webpFile?.lastModified}.png`, { type: 'image/png' }));
+            resolve(new File([pngBlob], `${webpFile?.lastModified?? 'converted'}.png`, { type: 'image/png' }));
           }, 'image/png');
         };
         image.src = event.target.result;
