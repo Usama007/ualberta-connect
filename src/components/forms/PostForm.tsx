@@ -78,7 +78,7 @@ const PostForm = ({ post, action }: PostFormProps) => {
     }
 
     console.log(newPost)
-    navigate(`/posts/${newPost.$id}`);
+    navigate(`/posts/${newPost?.$id}`);
   };
 
   return (
