@@ -68,7 +68,7 @@ const LeftSidebar = () => {
                 <NavLink
                   to={link.route}
                   // to={'/'}
-                  onClick={(e:any)=>{
+                  onClick={()=>{
                     console.log(link?.route)
                     if(link?.route === '/'){
                       const { data: currentUser } = useGetCurrentUser();
