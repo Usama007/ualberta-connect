@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 
-import { Button } from "@/components/ui";
+import { Button, toast } from "@/components/ui";
 import { Loader } from "@/components/shared";
 import { GridPostList, PostStats } from "@/components/shared";
 
@@ -21,15 +21,25 @@ const PostDetails = () => {
   const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(
     post?.creator.$id
   );
-  const { mutate: deletePost } = useDeletePost();
+  const { mutateAsync: deletePost, isLoading: isDeleteLoading } =
+    useDeletePost();
 
   const relatedPosts = userPosts?.documents.filter(
     (userPost) => userPost.$id !== id
   );
 
-  const handleDeletePost = () => {
-    deletePost({ postId: id, imageId: post?.imageId });
-    navigate(-1);
+  const handleDeletePost = async () => {
+    let d = await deletePost({ postId: id, imageId: post?.imageId });
+
+    if (!d) throw Error;
+
+    if (!isDeleteLoading) {
+      toast({
+        title: `Post deleted successfully.`,
+      });
+      navigate(-1);
+    }
+    // navigate(-1);
   };
 
   return (
@@ -100,19 +110,23 @@ const PostDetails = () => {
                   />
                 </Link>
 
-                <Button
-                  onClick={handleDeletePost}
-                  variant="ghost"
-                  className={`ost_details-delete_btn ${
-                    user.id !== post?.creator.$id && "hidden"
-                  }`}>
-                  <img
-                    src={"/assets/icons/delete.svg"}
-                    alt="delete"
-                    width={24}
-                    height={24}
-                  />
-                </Button>
+                {isDeleteLoading ? (
+                  <Loader />
+                ) : (
+                  <Button
+                    onClick={handleDeletePost}
+                    variant="ghost"
+                    className={`ost_details-delete_btn ${
+                      user.id !== post?.creator.$id && "hidden"
+                    }`}>
+                    <img
+                      src={"/assets/icons/delete.svg"}
+                      alt="delete"
+                      width={24}
+                      height={24}
+                    />
+                  </Button>
+                )}
               </div>
             </div>
 
