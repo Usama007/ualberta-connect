@@ -79,7 +79,7 @@ const Explore = () => {
 
       <div className="flex-between w-full max-w-5xl mt-16 mb-7">
         <h3 className="body-bold md:h3-bold">Popular Today</h3>
-
+{/* 
         <div className="flex-center gap-3 bg-light-2 rounded-xl px-4 py-2 cursor-pointer">
           <p className="small-medium md:base-medium text-dark-2">All</p>
           <img
@@ -88,7 +88,7 @@ const Explore = () => {
             height={20}
             alt="filter"
           />
-        </div>
+        </div> */}
       </div>
 
       <div className="flex flex-wrap gap-9 w-full max-w-5xl">
