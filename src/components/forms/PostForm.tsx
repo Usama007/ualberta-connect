@@ -76,7 +76,9 @@ const PostForm = ({ post, action }: PostFormProps) => {
         title: `${action} post failed. Please try again.`,
       });
     }
-    navigate("/");
+
+    console.log(newPost)
+    navigate(`/posts/${newPost.$id}`);
   };
 
   return (
