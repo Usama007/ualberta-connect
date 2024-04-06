@@ -4,7 +4,7 @@ import { INavLink } from "@/types";
 import { sidebarLinks } from "@/constants";
 import { Loader } from "@/components/shared";
 import { Button } from "@/components/ui/button";
-import { useSignOutAccount } from "@/lib/react-query/queries";
+import { useGetCurrentUser, useGetRecentPosts, useSignOutAccount } from "@/lib/react-query/queries";
 import { useUserContext, INITIAL_USER } from "@/context/AuthContext";
 
 const LeftSidebar = () => {
@@ -58,6 +58,7 @@ const LeftSidebar = () => {
           {sidebarLinks.map((link: INavLink) => {
             const isActive = pathname === link.route;
 
+
             return (
               <li
                 key={link.label}
@@ -67,6 +68,13 @@ const LeftSidebar = () => {
                 <NavLink
                   to={link.route}
                   // to={'/'}
+                  onClick={(e:any)=>{
+                    console.log(link?.route)
+                    if(link?.route === '/'){
+                      const { data: currentUser } = useGetCurrentUser();
+                      useGetRecentPosts(currentUser)
+                    }
+                  }}
 
                   className="flex gap-4 text-dark-4 font-bold items-center p-4">
                   <img
