@@ -21,6 +21,7 @@ const Home = () => {
     data: posts,
     fetchNextPage,
     hasNextPage,
+    isRefetching,
     isError: isErrorPosts,
   } = useGetRecentPosts(currentUser);
 
@@ -42,7 +43,7 @@ const Home = () => {
     }
   }, [posts]);
 
-  if (!posts)
+  if (!posts || isRefetching)
     return (
       <div className="flex-center w-full h-full">
         <Loader />
