@@ -1,9 +1,7 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-
 import { Button, toast } from "@/components/ui";
 import { Loader } from "@/components/shared";
 import { GridPostList, PostStats } from "@/components/shared";
-
 import {
   useGetPostById,
   useGetUserPosts,
@@ -11,37 +9,30 @@ import {
 } from "@/lib/react-query/queries";
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
-
 const PostDetails = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useUserContext();
-
   const { data: post, isLoading } = useGetPostById(id);
   const { data: userPosts, isLoading: isUserPostLoading } = useGetUserPosts(
     post?.creator.$id
   );
   const { mutateAsync: deletePost, isLoading: isDeleteLoading } =
     useDeletePost();
-
   const relatedPosts = userPosts?.documents.filter(
     (userPost) => userPost.$id !== id
   );
-
   const handleDeletePost = async () => {
     let d = await deletePost({ postId: id, imageId: post?.imageId });
-
     if (!d) throw Error;
-
     if (!isDeleteLoading) {
       toast({
         title: `Post deleted successfully.`,
       });
-      navigate(-1);
+      navigate('/');
     }
     // navigate(-1);
   };
-
   return (
     <div className="post_details-container">
       <div className="hidden md:flex max-w-5xl w-full">
@@ -58,7 +49,6 @@ const PostDetails = () => {
           <p className="small-medium lg:base-medium text-dark-1">Back</p>
         </Button>
       </div>
-
       {isLoading || !post ? (
         <Loader />
       ) : (
@@ -68,7 +58,6 @@ const PostDetails = () => {
             alt="creator"
             className="post_details-img"
           />
-
           <div className="post_details-info">
             <div className="flex-between w-full">
               <Link
@@ -97,7 +86,6 @@ const PostDetails = () => {
                   </div>
                 </div>
               </Link>
-
               <div className="flex-center gap-4">
                 <Link
                   to={`/update-post/${post?.$id}`}
@@ -109,15 +97,14 @@ const PostDetails = () => {
                     height={24}
                   />
                 </Link>
-
                 <Button
                   onClick={handleDeletePost}
-                  disabled={!isDeleteLoading}
+                  disabled={isDeleteLoading}
                   variant="ghost"
                   className={`ost_details-delete_btn ${
                     user.id !== post?.creator.$id && "hidden"
                   }`}>
-                  {!isDeleteLoading ? (
+                  {isDeleteLoading ? (
                     <Loader />
                   ) : (
                     <img
@@ -130,9 +117,7 @@ const PostDetails = () => {
                 </Button>
               </div>
             </div>
-
             <hr className="border w-full border-dark-4/80" />
-
             <div className="flex flex-col flex-1 w-full small-medium lg:base-regular">
               <p className="text-dark-4">{post?.caption}</p>
               <ul className="flex gap-1 mt-2">
@@ -145,17 +130,14 @@ const PostDetails = () => {
                 ))}
               </ul>
             </div>
-
             <div className="w-full">
               <PostStats post={post} userId={user.id} />
             </div>
           </div>
         </div>
       )}
-
       <div className="w-full max-w-5xl">
         <hr className="border w-full border-dark-4/80" />
-
         <h3 className="body-bold md:h3-bold w-full my-10">
           More Related Posts
         </h3>
@@ -168,5 +150,4 @@ const PostDetails = () => {
     </div>
   );
 };
-
 export default PostDetails;
