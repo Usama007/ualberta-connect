@@ -9,10 +9,13 @@ import {
 } from "@/lib/react-query/queries";
 import { useInView } from "react-intersection-observer";
 import { Fragment, useEffect } from "react";
+import { recentPostLoaded, setRecentPostLoaded } from "@/lib/utils";
 
 const Home = () => {
+  
   const { ref, inView } = useInView();
   const { data: currentUser } = useGetCurrentUser();
+  
 
   // Call useGetRecentPosts only when user?.id is available
   // const { data: posts, isLoading: isPostLoading, isError: isErrorPosts } = useGetRecentPosts(user?.id);
@@ -24,6 +27,10 @@ const Home = () => {
     isRefetching,
     isError: isErrorPosts,
   } = useGetRecentPosts(currentUser);
+
+  
+
+
 
   const {
     data: creators,
@@ -37,18 +44,21 @@ const Home = () => {
     }
   }, [inView]);
 
-  useEffect(() => {
-    if (posts) {
-      console.log(posts);
-    }
-  }, [posts]);
 
-  if (!posts || isRefetching)
+  if (!posts || (isRefetching && !recentPostLoaded)){
+    
     return (
       <div className="flex-center w-full h-full">
         <Loader />
       </div>
     );
+
+  }
+
+  if(!isRefetching){
+    setRecentPostLoaded(true)
+  }
+  
 
   if (isErrorPosts || isErrorCreators) {
     return (

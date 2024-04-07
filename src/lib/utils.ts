@@ -86,3 +86,14 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
 export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId);
 };
+
+export let recentPostLoaded:any = false;
+
+export const setRecentPostLoaded = (param:any)=>{
+  recentPostLoaded = param
+}
+
+
+
+
+
