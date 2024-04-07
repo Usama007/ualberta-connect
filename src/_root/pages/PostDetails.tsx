@@ -110,23 +110,24 @@ const PostDetails = () => {
                   />
                 </Link>
 
-                {isDeleteLoading ? (
-                  <Loader />
-                ) : (
-                  <Button
-                    onClick={handleDeletePost}
-                    variant="ghost"
-                    className={`ost_details-delete_btn ${
-                      user.id !== post?.creator.$id && "hidden"
-                    }`}>
+                <Button
+                  onClick={handleDeletePost}
+                  disabled={!isDeleteLoading}
+                  variant="ghost"
+                  className={`ost_details-delete_btn ${
+                    user.id !== post?.creator.$id && "hidden"
+                  }`}>
+                  {!isDeleteLoading ? (
+                    <Loader />
+                  ) : (
                     <img
                       src={"/assets/icons/delete.svg"}
                       alt="delete"
                       width={24}
                       height={24}
                     />
-                  </Button>
-                )}
+                  )}
+                </Button>
               </div>
             </div>
 
