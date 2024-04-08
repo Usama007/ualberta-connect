@@ -1,9 +1,10 @@
 import { Models } from "appwrite";
 import { Link } from "react-router-dom";
 
-import { PostStats } from "@/components/shared";
+import { Loader, PostStats } from "@/components/shared";
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
+import { useState } from "react";
 
 type PostCardProps = {
   post: Models.Document;
@@ -13,6 +14,12 @@ const PostCard = ({ post }: PostCardProps) => {
   const { user } = useUserContext();
 
   if (!post.creator) return;
+
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const handleImageLoaded = () => {
+    setImageLoaded(true);
+  };
 
   return (
     <div className="post-card">
@@ -69,10 +76,13 @@ const PostCard = ({ post }: PostCardProps) => {
           </ul>
         </div>
 
+        {!imageLoaded && <div className="skeleton"></div>}
+
         <img
           src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}
           alt="post image"
-          className="post-card_img"
+          className={`post-card_img ${imageLoaded ? "visible" : "hidden"}`}
+          onLoad={handleImageLoaded}
         />
       </Link>
 
