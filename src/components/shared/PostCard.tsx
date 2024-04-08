@@ -12,15 +12,15 @@ type PostCardProps = {
 };
 
 const PostCard = ({ post }: PostCardProps) => {
-  const { user } = useUserContext();
-
-  if (!post.creator) return;
-
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  const { user } = useUserContext();
 
   const handleImageLoaded = () => {
     setImageLoaded(true);
   };
+
+  if (!post.creator) return;
 
   return (
     <div className="post-card">

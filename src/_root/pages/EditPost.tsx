@@ -24,7 +24,6 @@ const EditPost = () => {
             width={36}
             height={36}
             alt="edit"
-            // className="invert-white"
           />
           <h2 className="h3-bold md:h2-bold text-left w-full text-dark-3">Edit Post</h2>
         </div>

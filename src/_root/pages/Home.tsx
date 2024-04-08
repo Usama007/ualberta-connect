@@ -1,5 +1,4 @@
 import { Models } from "appwrite";
-
 // import { useToast } from "@/components/ui/use-toast";
 import { Loader, PostCard, UserCard } from "@/components/shared";
 import {
@@ -10,16 +9,11 @@ import {
 import { useInView } from "react-intersection-observer";
 import { Fragment, useEffect } from "react";
 import { recentPostLoaded, setRecentPostLoaded } from "@/lib/utils";
-
 const Home = () => {
-  
   const { ref, inView } = useInView();
   const { data: currentUser } = useGetCurrentUser();
-  
-
   // Call useGetRecentPosts only when user?.id is available
   // const { data: posts, isLoading: isPostLoading, isError: isErrorPosts } = useGetRecentPosts(user?.id);
-
   const {
     data: posts,
     fetchNextPage,
@@ -27,39 +21,30 @@ const Home = () => {
     isRefetching,
     isError: isErrorPosts,
   } = useGetRecentPosts(currentUser);
-
-  
-
-
-
   const {
     data: creators,
     isLoading: isUserLoading,
     isError: isErrorCreators,
   } = useGetUsers(10);
-
   useEffect(() => {
     if (inView) {
       fetchNextPage();
     }
   }, [inView]);
-
-
-  if (!posts || (isRefetching && !recentPostLoaded)){
-    
+  useEffect(() => {
+    if (posts) {
+      console.log(posts);
+    }
+  }, [posts]);
+  if (!posts || (isRefetching && !recentPostLoaded))
     return (
       <div className="flex-center w-full h-full">
         <Loader />
       </div>
     );
-
+  if (!isRefetching) {
+    setRecentPostLoaded(true);
   }
-
-  if(!isRefetching){
-    setRecentPostLoaded(true)
-  }
-  
-
   if (isErrorPosts || isErrorCreators) {
     return (
       <div className="flex flex-1">
@@ -72,7 +57,6 @@ const Home = () => {
       </div>
     );
   }
-
   return (
     <div className="flex flex-1">
       <div className="home-container">
@@ -102,7 +86,6 @@ const Home = () => {
           </div>
         )}
       </div>
-
       <div className="home-creators">
         <h3 className="h3-bold text-dark-1">Top Creators</h3>
         {isUserLoading && !creators ? (
@@ -120,5 +103,4 @@ const Home = () => {
     </div>
   );
 };
-
 export default Home;

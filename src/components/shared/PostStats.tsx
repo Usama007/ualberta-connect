@@ -1,7 +1,6 @@
 import { Models } from "appwrite";
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-
 import { checkIsLiked } from "@/lib/utils";
 import {
   useLikePost,
@@ -10,68 +9,52 @@ import {
   useGetCurrentUser,
 } from "@/lib/react-query/queries";
 import Loader from "./Loader";
-
 type PostStatsProps = {
   post: Models.Document;
   userId: string;
 };
-
 const PostStats = ({ post, userId }: PostStatsProps) => {
   const location = useLocation();
   const likesList = post.likes.map((user: Models.Document) => user.$id);
-
   const [likes, setLikes] = useState<string[]>(likesList);
   const [isSaved, setIsSaved] = useState(false);
-
   const { mutateAsync: likePost, isLoading: loadingLike } = useLikePost();
   const { mutateAsync: savePost, isLoading: loadingSave } = useSavePost();
   const { mutate: deleteSavePost } = useDeleteSavedPost();
-
   const { data: currentUser } = useGetCurrentUser();
-
   const savedPostRecord = currentUser?.save.find(
     (record: Models.Document) => record?.post?.$id === post?.$id
   );
-
   useEffect(() => {
     setIsSaved(!!savedPostRecord);
   }, [currentUser]);
-
   const handleLikePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     e.stopPropagation();
-
     let likesArray = [...likes];
-
     if (likesArray.includes(userId)) {
       likesArray = likesArray.filter((Id) => Id !== userId);
     } else {
       likesArray.push(userId);
     }
-
     setLikes(likesArray);
     likePost({ postId: post.$id, likesArray });
   };
-
   const handleSavePost = (
     e: React.MouseEvent<HTMLImageElement, MouseEvent>
   ) => {
     e.stopPropagation();
-
     if (savedPostRecord) {
       setIsSaved(false);
       return deleteSavePost(savedPostRecord.$id);
     }
-
     savePost({ userId: userId, postId: post.$id });
     setIsSaved(true);
   };
-
   const containerStyles = location.pathname.startsWith("/profile")
     ? "w-full"
     : "";
-
   return (
     <div
       className={`flex justify-between items-center z-20 ${containerStyles}`}>
@@ -92,12 +75,10 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
             className="cursor-pointer"
           />
         )}
-
         <p className="small-medium lg:base-medium text-yellow-400">
           {likes.length}
         </p>
       </div>
-
       <div className="flex gap-2">
         {loadingSave ? (
           <Loader />
@@ -115,5 +96,4 @@ const PostStats = ({ post, userId }: PostStatsProps) => {
     </div>
   );
 };
-
 export default PostStats;

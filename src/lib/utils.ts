@@ -1,17 +1,13 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
-
 export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
-
 export const convertToPng = async (webpFile: File): Promise<File> => {
   try {
     const blob = new Blob([webpFile], { type: 'image/webp' });
     const reader = new FileReader();
-
     return new Promise((resolve, reject) => {
       reader.onload = (event:any) => {
         const image:any = new Image();
@@ -35,38 +31,30 @@ export const convertToPng = async (webpFile: File): Promise<File> => {
     throw error; // Re-throw for handling in onDrop
   }
 };
-
-
 export function formatDateString(dateString: string) {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "short",
     day: "numeric",
   };
-
   const date = new Date(dateString);
   const formattedDate = date.toLocaleDateString("en-US", options);
-
   const time = date.toLocaleTimeString([], {
     hour: "numeric",
     minute: "2-digit",
   });
-
   return `${formattedDate} at ${time}`;
 }
-
 // 
 export const multiFormatDateString = (timestamp: string = ""): string => {
   const timestampNum = Math.round(new Date(timestamp).getTime() / 1000);
   const date: Date = new Date(timestampNum * 1000);
   const now: Date = new Date();
-
   const diff: number = now.getTime() - date.getTime();
   const diffInSeconds: number = diff / 1000;
   const diffInMinutes: number = diffInSeconds / 60;
   const diffInHours: number = diffInMinutes / 60;
   const diffInDays: number = diffInHours / 24;
-
   switch (true) {
     case Math.floor(diffInDays) >= 30:
       return formatDateString(timestamp);
@@ -82,18 +70,10 @@ export const multiFormatDateString = (timestamp: string = ""): string => {
       return "Just now";
   }
 };
-
 export const checkIsLiked = (likeList: string[], userId: string) => {
   return likeList.includes(userId);
 };
-
 export let recentPostLoaded:any = false;
-
 export const setRecentPostLoaded = (param:any)=>{
   recentPostLoaded = param
 }
-
-
-
-
-
