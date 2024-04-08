@@ -26,6 +26,8 @@ import SigninForm from "@/_auth/forms/SigninForm";
 import { Toaster } from "@/components/ui/toaster";
 
 import "./globals.css";
+import "react-loading-skeleton/dist/skeleton.css";
+
 import { useGetCurrentUser } from "./lib/react-query/queries";
 import { setRecentPostLoaded } from "./lib/utils";
 import { useEffect } from "react";

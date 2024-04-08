@@ -1,10 +1,11 @@
 import { Models } from "appwrite";
 import { Link } from "react-router-dom";
 
-import { Loader, PostStats } from "@/components/shared";
+import { PostStats } from "@/components/shared";
 import { multiFormatDateString } from "@/lib/utils";
 import { useUserContext } from "@/context/AuthContext";
 import { useState } from "react";
+import Skeleton from "react-loading-skeleton";
 
 type PostCardProps = {
   post: Models.Document;
@@ -76,7 +77,7 @@ const PostCard = ({ post }: PostCardProps) => {
           </ul>
         </div>
 
-        {!imageLoaded && <div className="skeleton"></div>}
+        {!imageLoaded && <Skeleton className="post-card_img" />}
 
         <img
           src={post.imageUrl || "/assets/icons/profile-placeholder.svg"}
